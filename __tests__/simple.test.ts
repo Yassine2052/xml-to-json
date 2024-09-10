@@ -1,0 +1,144 @@
+import { jsonify } from "../src";
+
+const testCases: Array<{description: string, xml: string, expected: any, parser: "string" | "default", parseAttributes?: boolean}> = [
+  {
+    description: "should parse a entity simple XML",
+    xml: `
+      <Order>
+        <DeliveryPerson>John Doe</DeliveryPerson>
+        <IsCanceled>false</IsCanceled>
+        <IsDelivered>true</IsDelivered>
+        <OrderCode>12345</OrderCode>
+      </Order>`,
+    expected: {
+      Order: {
+        tagname: "Order",
+        nodes: {
+          DeliveryPerson: { tagname: "DeliveryPerson", value: "John Doe" },
+          IsCanceled: { tagname: "IsCanceled", value: "false" },
+          IsDelivered: { tagname: "IsDelivered", value: "true"},
+          OrderCode: { tagname: "OrderCode", value: "12345"}
+        }
+      }
+    },
+    parser: "string"
+  },
+  {
+    description: "should parse a entity simple XML",
+    xml: `
+      <Order>
+        <DeliveryPerson>John Doe</DeliveryPerson>
+        <IsCanceled>false</IsCanceled>
+        <IsDelivered>true</IsDelivered>
+        <OrderCode>12345</OrderCode>
+      </Order>`,
+    expected: {
+      Order: {
+        tagname: "Order",
+        nodes: {
+          DeliveryPerson: { tagname: "DeliveryPerson", value: "John Doe" },
+          IsCanceled: { tagname: "IsCanceled", value: false },
+          IsDelivered: { tagname: "IsDelivered", value: true },
+          OrderCode: { tagname: "OrderCode", value: 12345}
+        }
+      }
+    },
+    parser: "default"
+  },
+  {
+    description: "should parse a simple XML entity with attributes",
+    xml: `
+      <Order status="active" priority="high" isUrgent="false" itemCount="3">
+        <DeliveryPerson>John Doe</DeliveryPerson>
+        <IsCanceled>false</IsCanceled>
+        <IsDelivered>true</IsDelivered>
+        <OrderCode>12345</OrderCode>
+      </Order>`,
+    expected: {
+        Order: {
+          tagname: "Order",
+          attributes: {
+            status: "active",
+            priority: "high",
+            isUrgent: "false",
+            itemCount: "3"
+          },
+          nodes: {
+            DeliveryPerson: { tagname: "DeliveryPerson", value: "John Doe" },
+            IsCanceled: { tagname: "IsCanceled", value: "false" },
+            IsDelivered: { tagname: "IsDelivered", value: "true" },
+            OrderCode: { tagname: "OrderCode", value: "12345"}
+          }
+        }
+    },
+    parser: "string"
+  },
+  {
+    description: "should parse a simple XML entity with attributes",
+    xml: `
+      <Order status="active" priority="high" isUrgent="false" itemCount="3">
+        <DeliveryPerson>John Doe</DeliveryPerson>
+        <IsCanceled>false</IsCanceled>
+        <IsDelivered>true</IsDelivered>
+        <OrderCode>12345</OrderCode>
+      </Order>`,
+    expected: {
+        Order: {
+          tagname: "Order",
+          attributes: {
+            status: "active",
+            priority: "high",
+            isUrgent: "false",
+            itemCount: "3"
+          },
+          nodes: {
+            DeliveryPerson: { tagname: "DeliveryPerson", value: "John Doe" },
+            IsCanceled: { tagname: "IsCanceled", value: false },
+            IsDelivered: { tagname: "IsDelivered", value: true },
+            OrderCode: { tagname: "OrderCode", value: 12345}
+          }
+        }
+    },
+    parser: "default"
+  },
+  {
+    description: "should parse a simple XML entity with attributes",
+    xml: `
+      <Order status="active" priority="high" isUrgent="false" itemCount="3">
+        <DeliveryPerson>John Doe</DeliveryPerson>
+        <IsCanceled>false</IsCanceled>
+        <IsDelivered>true</IsDelivered>
+        <OrderCode>12345</OrderCode>
+      </Order>`,
+    expected: {
+        Order: {
+          tagname: "Order",
+          attributes: {
+            status: "active",
+            priority: "high",
+            isUrgent: false,
+            itemCount: 3
+          },
+          nodes: {
+            DeliveryPerson: { tagname: "DeliveryPerson", value: "John Doe" },
+            IsCanceled: { tagname: "IsCanceled", value: false },
+            IsDelivered: { tagname: "IsDelivered", value: true },
+            OrderCode: { tagname: "OrderCode", value: 12345}
+          }
+        }
+    },
+    parser: "default",
+    parseAttributes: true
+  }
+];
+
+describe("parse simple XML entities", ()=> {
+  test.each(testCases)('$description - parser: $parser', ({ xml, expected, parser, parseAttributes }) => {
+      const result = jsonify({
+        xml,
+        valueParser: parser,
+        parseAttributes
+      });
+      expect(result).toEqual(expected);
+  });
+});
