@@ -31,112 +31,114 @@ const testCases = [
                     <description>After the collapse of a nanotechnology society in England, the young survivors lay the foundation for a new society.</description>
                 </book>
             </catalog>`,
-        expected: {
-            rootName: "catalog",
-            "catalog": {
-                "tagname": "catalog",
-                "nodes": {
-                    "book": [
-                        {
-                            "attributes": {
-                                "id": "bk101"
+        expected: [
+            "catalog",
+            {
+                "catalog": {
+                    "tagname": "catalog",
+                    "nodes": {
+                        "book": [
+                            {
+                                "attributes": {
+                                    "id": "bk101"
+                                },
+                                "nodes": {
+                                    "author": {
+                                        "tagname": "author",
+                                        "value": "Gambardella, Matthew"
+                                    },
+                                    "title": {
+                                        "tagname": "title",
+                                        "value": "XML Developer's Guide"
+                                    },
+                                    "genre": {
+                                        "tagname": "genre",
+                                        "value": "Computer"
+                                    },
+                                    "price": {
+                                        "tagname": "price",
+                                        "value": "44.95"
+                                    },
+                                    "publish_date": {
+                                        "tagname": "publish_date",
+                                        "value": "2000-10-01"
+                                    },
+                                    "description": {
+                                        "tagname": "description",
+                                        "value": "An in-depth look at creating applications with XML."
+                                    }
+                                },
+                                "tagname": "book"
                             },
-                            "nodes": {
-                                "author": {
-                                    "tagname": "author",
-                                    "value": "Gambardella, Matthew"
+                            {
+                                "attributes": {
+                                    "id": "bk102"
                                 },
-                                "title": {
-                                    "tagname": "title",
-                                    "value": "XML Developer's Guide"
+                                "nodes": {
+                                    "author": {
+                                        "tagname": "author",
+                                        "value": "Ralls, Kim"
+                                    },
+                                    "title": {
+                                        "tagname": "title",
+                                        "value": "Midnight Rain"
+                                    },
+                                    "genre": {
+                                        "tagname": "genre",
+                                        "value": "Fantasy"
+                                    },
+                                    "price": {
+                                        "tagname": "price",
+                                        "value": "5.95"
+                                    },
+                                    "publish_date": {
+                                        "tagname": "publish_date",
+                                        "value": "2000-12-16"
+                                    },
+                                    "description": {
+                                        "tagname": "description",
+                                        "value": "A former architect battles corporate zombies, an evil sorceress, and her own childhood to become queen of the world."
+                                    }
                                 },
-                                "genre": {
-                                    "tagname": "genre",
-                                    "value": "Computer"
-                                },
-                                "price": {
-                                    "tagname": "price",
-                                    "value": "44.95"
-                                },
-                                "publish_date": {
-                                    "tagname": "publish_date",
-                                    "value": "2000-10-01"
-                                },
-                                "description": {
-                                    "tagname": "description",
-                                    "value": "An in-depth look at creating applications with XML."
-                                }
+                                "tagname": "book"
                             },
-                            "tagname": "book"
-                        },
-                        {
-                            "attributes": {
-                                "id": "bk102"
-                            },
-                            "nodes": {
-                                "author": {
-                                    "tagname": "author",
-                                    "value": "Ralls, Kim"
+                            {
+                                "attributes": {
+                                    "id": "bk103"
                                 },
-                                "title": {
-                                    "tagname": "title",
-                                    "value": "Midnight Rain"
-                                },
-                                "genre": {
-                                    "tagname": "genre",
-                                    "value": "Fantasy"
-                                },
-                                "price": {
-                                    "tagname": "price",
-                                    "value": "5.95"
-                                },
-                                "publish_date": {
-                                    "tagname": "publish_date",
-                                    "value": "2000-12-16"
-                                },
-                                "description": {
-                                    "tagname": "description",
-                                    "value": "A former architect battles corporate zombies, an evil sorceress, and her own childhood to become queen of the world."
-                                }
-                            },
-                            "tagname": "book"
-                        },
-                        {
-                            "attributes": {
-                                "id": "bk103"
-                            },
-                            "nodes": {
-                                "author": {
-                                    "tagname": "author",
-                                    "value": "Corets, Eva"
-                                },
-                                "title": {
-                                    "tagname": "title",
-                                    "value": "Maeve Ascendant"
-                                },
-                                "genre": {
-                                    "tagname": "genre",
-                                    "value": "Fantasy"
-                                },
-                                "price": {
-                                    "tagname": "price",
-                                    "value": "5.95"
-                                },
-                                "publish_date": {
-                                    "tagname": "publish_date",
-                                    "value": "2000-11-17"
-                                },
-                                "description": {
-                                    "tagname": "description",
-                                    "value": "After the collapse of a nanotechnology society in England, the young survivors lay the foundation for a new society."
-                                }
-                            },                            
-                            "tagname": "book"
-                        }
-                    ]
+                                "nodes": {
+                                    "author": {
+                                        "tagname": "author",
+                                        "value": "Corets, Eva"
+                                    },
+                                    "title": {
+                                        "tagname": "title",
+                                        "value": "Maeve Ascendant"
+                                    },
+                                    "genre": {
+                                        "tagname": "genre",
+                                        "value": "Fantasy"
+                                    },
+                                    "price": {
+                                        "tagname": "price",
+                                        "value": "5.95"
+                                    },
+                                    "publish_date": {
+                                        "tagname": "publish_date",
+                                        "value": "2000-11-17"
+                                    },
+                                    "description": {
+                                        "tagname": "description",
+                                        "value": "After the collapse of a nanotechnology society in England, the young survivors lay the foundation for a new society."
+                                    }
+                                },                            
+                                "tagname": "book"
+                            }
+                        ]
+                    }
                 }
-            }           
-        }
+            }
+        ]
     },
     {
         description: "should return the corresponding json to with many nested tags",
@@ -226,7 +228,7 @@ const testCases = [
                     </shelf>
                 </section>
             </library>`,
-        expected: {"rootName":"library","library":{"tagname":"library","nodes":{"section":[{"tagname":"section","attributes":{"name":"Fiction"},"nodes":{"shelf":[{"tagname":"shelf","attributes":{"number":"1"},"nodes":{"book":[{"tagname":"book","attributes":{"id":"bk101"},"nodes":{"title":{"tagname":"title","value":"The Great Gatsby"},"author":{"tagname":"author","value":"F. Scott Fitzgerald"},"published":{"tagname":"published","nodes":{"year":{"tagname":"year","value":"1925"},"month":{"tagname":"month","value":"April"},"day":{"tagname":"day","value":"10"}}},"genres":{"tagname":"genres","nodes":{"genre":[{"tagname":"genre","value":"Novel"},{"tagname":"genre","value":"Fiction"}]}},"availability":{"tagname":"availability","nodes":{"status":{"tagname":"status","value":"Available"},"checkedOutBy":{"tagname":"checkedOutBy"}}}}},{"tagname":"book","attributes":{"id":"bk102"},"nodes":{"title":{"tagname":"title","value":"1984"},"author":{"tagname":"author","value":"George Orwell"},"published":{"tagname":"published","nodes":{"year":{"tagname":"year","value":"1949"},"month":{"tagname":"month","value":"June"},"day":{"tagname":"day","value":"8"}}},"genres":{"tagname":"genres","nodes":{"genre":[{"tagname":"genre","value":"Dystopian"},{"tagname":"genre","value":"Political Fiction"}]}},"availability":{"tagname":"availability","nodes":{"status":{"tagname":"status","value":"Checked Out"},"checkedOutBy":{"tagname":"checkedOutBy","nodes":{"user":{"tagname":"user","attributes":{"id":"usr123"},"nodes":{"name":{"tagname":"name","value":"John Doe"},"membershipType":{"tagname":"membershipType","value":"Premium"}}}}}}}}}]}},{"tagname":"shelf","attributes":{"number":"2"},"nodes":{"book":{"tagname":"book","attributes":{"id":"bk103"},"nodes":{"title":{"tagname":"title","value":"Brave New World"},"author":{"tagname":"author","value":"Aldous Huxley"},"published":{"tagname":"published","nodes":{"year":{"tagname":"year","value":"1932"},"month":{"tagname":"month","value":"August"},"day":{"tagname":"day","value":"30"}}},"genres":{"tagname":"genres","nodes":{"genre":[{"tagname":"genre","value":"Dystopian"},{"tagname":"genre","value":"Science Fiction"}]}},"availability":{"tagname":"availability","nodes":{"status":{"tagname":"status","value":"Available"},"checkedOutBy":{"tagname":"checkedOutBy"}}}}}}}]}},{"tagname":"section","attributes":{"name":"Non-Fiction"},"nodes":{"shelf":{"tagname":"shelf","attributes":{"number":"1"},"nodes":{"book":{"tagname":"book","attributes":{"id":"bk104"},"nodes":{"title":{"tagname":"title","value":"Sapiens: A Brief History of Humankind"},"author":{"tagname":"author","value":"Yuval Noah Harari"},"published":{"tagname":"published","nodes":{"year":{"tagname":"year","value":"2011"},"month":{"tagname":"month","value":"February"},"day":{"tagname":"day","value":"4"}}},"genres":{"tagname":"genres","nodes":{"genre":[{"tagname":"genre","value":"Non-fiction"},{"tagname":"genre","value":"History"}]}},"availability":{"tagname":"availability","nodes":{"status":{"tagname":"status","value":"Available"},"checkedOutBy":{"tagname":"checkedOutBy"}}}}}}}}}]}}}
+        expected: ["library",{"library":{"tagname":"library","nodes":{"section":[{"tagname":"section","attributes":{"name":"Fiction"},"nodes":{"shelf":[{"tagname":"shelf","attributes":{"number":"1"},"nodes":{"book":[{"tagname":"book","attributes":{"id":"bk101"},"nodes":{"title":{"tagname":"title","value":"The Great Gatsby"},"author":{"tagname":"author","value":"F. Scott Fitzgerald"},"published":{"tagname":"published","nodes":{"year":{"tagname":"year","value":"1925"},"month":{"tagname":"month","value":"April"},"day":{"tagname":"day","value":"10"}}},"genres":{"tagname":"genres","nodes":{"genre":[{"tagname":"genre","value":"Novel"},{"tagname":"genre","value":"Fiction"}]}},"availability":{"tagname":"availability","nodes":{"status":{"tagname":"status","value":"Available"},"checkedOutBy":{"tagname":"checkedOutBy"}}}}},{"tagname":"book","attributes":{"id":"bk102"},"nodes":{"title":{"tagname":"title","value":"1984"},"author":{"tagname":"author","value":"George Orwell"},"published":{"tagname":"published","nodes":{"year":{"tagname":"year","value":"1949"},"month":{"tagname":"month","value":"June"},"day":{"tagname":"day","value":"8"}}},"genres":{"tagname":"genres","nodes":{"genre":[{"tagname":"genre","value":"Dystopian"},{"tagname":"genre","value":"Political Fiction"}]}},"availability":{"tagname":"availability","nodes":{"status":{"tagname":"status","value":"Checked Out"},"checkedOutBy":{"tagname":"checkedOutBy","nodes":{"user":{"tagname":"user","attributes":{"id":"usr123"},"nodes":{"name":{"tagname":"name","value":"John Doe"},"membershipType":{"tagname":"membershipType","value":"Premium"}}}}}}}}}]}},{"tagname":"shelf","attributes":{"number":"2"},"nodes":{"book":{"tagname":"book","attributes":{"id":"bk103"},"nodes":{"title":{"tagname":"title","value":"Brave New World"},"author":{"tagname":"author","value":"Aldous Huxley"},"published":{"tagname":"published","nodes":{"year":{"tagname":"year","value":"1932"},"month":{"tagname":"month","value":"August"},"day":{"tagname":"day","value":"30"}}},"genres":{"tagname":"genres","nodes":{"genre":[{"tagname":"genre","value":"Dystopian"},{"tagname":"genre","value":"Science Fiction"}]}},"availability":{"tagname":"availability","nodes":{"status":{"tagname":"status","value":"Available"},"checkedOutBy":{"tagname":"checkedOutBy"}}}}}}}]}},{"tagname":"section","attributes":{"name":"Non-Fiction"},"nodes":{"shelf":{"tagname":"shelf","attributes":{"number":"1"},"nodes":{"book":{"tagname":"book","attributes":{"id":"bk104"},"nodes":{"title":{"tagname":"title","value":"Sapiens: A Brief History of Humankind"},"author":{"tagname":"author","value":"Yuval Noah Harari"},"published":{"tagname":"published","nodes":{"year":{"tagname":"year","value":"2011"},"month":{"tagname":"month","value":"February"},"day":{"tagname":"day","value":"4"}}},"genres":{"tagname":"genres","nodes":{"genre":[{"tagname":"genre","value":"Non-fiction"},{"tagname":"genre","value":"History"}]}},"availability":{"tagname":"availability","nodes":{"status":{"tagname":"status","value":"Available"},"checkedOutBy":{"tagname":"checkedOutBy"}}}}}}}}}]}}}]
     }
 ];
 

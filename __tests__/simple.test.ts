@@ -10,18 +10,20 @@ const testCases: Array<{description: string, xml: string, expected: any, parser:
         <IsDelivered>true</IsDelivered>
         <OrderCode>12345</OrderCode>
       </Order>`,
-    expected: {
-      rootName: "Order",
-      Order: {
-        tagname: "Order",
-        nodes: {
-          DeliveryPerson: { tagname: "DeliveryPerson", value: "John Doe" },
-          IsCanceled: { tagname: "IsCanceled", value: "false" },
-          IsDelivered: { tagname: "IsDelivered", value: "true"},
-          OrderCode: { tagname: "OrderCode", value: "12345"}
+    expected: [
+      "Order",
+      {
+        Order: {
+          tagname: "Order",
+          nodes: {
+            DeliveryPerson: { tagname: "DeliveryPerson", value: "John Doe" },
+            IsCanceled: { tagname: "IsCanceled", value: "false" },
+            IsDelivered: { tagname: "IsDelivered", value: "true"},
+            OrderCode: { tagname: "OrderCode", value: "12345"}
+          }
         }
       }
-    },
+    ],
     parser: "string"
   },
   {
@@ -33,18 +35,20 @@ const testCases: Array<{description: string, xml: string, expected: any, parser:
         <IsDelivered>true</IsDelivered>
         <OrderCode>12345</OrderCode>
       </Order>`,
-    expected: {
-      rootName: "Order",
-      Order: {
-        tagname: "Order",
-        nodes: {
-          DeliveryPerson: { tagname: "DeliveryPerson", value: "John Doe" },
-          IsCanceled: { tagname: "IsCanceled", value: false },
-          IsDelivered: { tagname: "IsDelivered", value: true },
-          OrderCode: { tagname: "OrderCode", value: 12345}
+    expected: [
+      "Order",
+      {
+        Order: {
+          tagname: "Order",
+          nodes: {
+            DeliveryPerson: { tagname: "DeliveryPerson", value: "John Doe" },
+            IsCanceled: { tagname: "IsCanceled", value: false },
+            IsDelivered: { tagname: "IsDelivered", value: true },
+            OrderCode: { tagname: "OrderCode", value: 12345}
+          }
         }
       }
-    },
+    ],
     parser: "default"
   },
   {
@@ -56,24 +60,26 @@ const testCases: Array<{description: string, xml: string, expected: any, parser:
         <IsDelivered>true</IsDelivered>
         <OrderCode>12345</OrderCode>
       </Order>`,
-    expected: {
-        rootName: "Order",
-        Order: {
-          tagname: "Order",
-          attributes: {
-            status: "active",
-            priority: "high",
-            isUrgent: "false",
-            itemCount: "3"
-          },
-          nodes: {
-            DeliveryPerson: { tagname: "DeliveryPerson", value: "John Doe" },
-            IsCanceled: { tagname: "IsCanceled", value: "false" },
-            IsDelivered: { tagname: "IsDelivered", value: "true" },
-            OrderCode: { tagname: "OrderCode", value: "12345"}
+    expected: [
+        "Order",
+        {
+          Order: {
+            tagname: "Order",
+            attributes: {
+              status: "active",
+              priority: "high",
+              isUrgent: "false",
+              itemCount: "3"
+            },
+            nodes: {
+              DeliveryPerson: { tagname: "DeliveryPerson", value: "John Doe" },
+              IsCanceled: { tagname: "IsCanceled", value: "false" },
+              IsDelivered: { tagname: "IsDelivered", value: "true" },
+              OrderCode: { tagname: "OrderCode", value: "12345"}
+            }
           }
         }
-    },
+    ],
     parser: "string"
   },
   {
@@ -85,24 +91,26 @@ const testCases: Array<{description: string, xml: string, expected: any, parser:
         <IsDelivered>true</IsDelivered>
         <OrderCode>12345</OrderCode>
       </Order>`,
-    expected: {
-        rootName: "Order",
-        Order: {
-          tagname: "Order",
-          attributes: {
-            status: "active",
-            priority: "high",
-            isUrgent: "false",
-            itemCount: "3"
-          },
-          nodes: {
-            DeliveryPerson: { tagname: "DeliveryPerson", value: "John Doe" },
-            IsCanceled: { tagname: "IsCanceled", value: false },
-            IsDelivered: { tagname: "IsDelivered", value: true },
-            OrderCode: { tagname: "OrderCode", value: 12345}
+    expected: [
+        "Order",
+        {
+          Order: {
+            tagname: "Order",
+            attributes: {
+              status: "active",
+              priority: "high",
+              isUrgent: "false",
+              itemCount: "3"
+            },
+            nodes: {
+              DeliveryPerson: { tagname: "DeliveryPerson", value: "John Doe" },
+              IsCanceled: { tagname: "IsCanceled", value: false },
+              IsDelivered: { tagname: "IsDelivered", value: true },
+              OrderCode: { tagname: "OrderCode", value: 12345}
+            }
           }
         }
-    },
+    ],
     parser: "default"
   },
   {
@@ -114,8 +122,9 @@ const testCases: Array<{description: string, xml: string, expected: any, parser:
         <IsDelivered>true</IsDelivered>
         <OrderCode>12345</OrderCode>
       </Order>`,
-    expected: {
-        rootName: "Order",
+    expected: [
+      "Order",
+      {
         Order: {
           tagname: "Order",
           attributes: {
@@ -131,7 +140,8 @@ const testCases: Array<{description: string, xml: string, expected: any, parser:
             OrderCode: { tagname: "OrderCode", value: 12345}
           }
         }
-    },
+      }
+    ],
     parser: "default",
     parseAttributes: true
   },
@@ -144,24 +154,26 @@ const testCases: Array<{description: string, xml: string, expected: any, parser:
         <IsDelivered>true</IsDelivered>
         <OrderCode>12345</OrderCode>
       </Order>`,
-    expected: {
-        rootName: "Order",
-        Order: {
-          tagname: "Order",
-          attributes: {
-            status: "(active)",
-            priority: "#high",
-            isUrgent: false,
-            itemCount: 3
-          },
-          nodes: {
-            DeliveryPerson: { tagname: "DeliveryPerson", value: "John Doe" },
-            IsCanceled: { tagname: "IsCanceled", value: false },
-            IsDelivered: { tagname: "IsDelivered", value: true },
-            OrderCode: { tagname: "OrderCode", value: 12345}
+    expected: [
+        "Order",
+        {
+          Order: {
+            tagname: "Order",
+            attributes: {
+              status: "(active)",
+              priority: "#high",
+              isUrgent: false,
+              itemCount: 3
+            },
+            nodes: {
+              DeliveryPerson: { tagname: "DeliveryPerson", value: "John Doe" },
+              IsCanceled: { tagname: "IsCanceled", value: false },
+              IsDelivered: { tagname: "IsDelivered", value: true },
+              OrderCode: { tagname: "OrderCode", value: 12345}
+            }
           }
         }
-    },
+    ],
     parser: "default",
     parseAttributes: true,
     sanitize: true
