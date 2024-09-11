@@ -1,6 +1,6 @@
 import { jsonify } from "../src";
 
-const testCases: Array<{description: string, xml: string, expected: any, parser: "string" | "default", parseAttributes?: boolean}> = [
+const testCases: Array<{description: string, xml: string, expected: any, parser: "string" | "default", sanitize?: boolean, parseAttributes?: boolean}> = [
   {
     description: "should parse a entity simple XML",
     xml: `
@@ -11,6 +11,7 @@ const testCases: Array<{description: string, xml: string, expected: any, parser:
         <OrderCode>12345</OrderCode>
       </Order>`,
     expected: {
+      rootName: "Order",
       Order: {
         tagname: "Order",
         nodes: {
@@ -33,6 +34,7 @@ const testCases: Array<{description: string, xml: string, expected: any, parser:
         <OrderCode>12345</OrderCode>
       </Order>`,
     expected: {
+      rootName: "Order",
       Order: {
         tagname: "Order",
         nodes: {
@@ -55,6 +57,7 @@ const testCases: Array<{description: string, xml: string, expected: any, parser:
         <OrderCode>12345</OrderCode>
       </Order>`,
     expected: {
+        rootName: "Order",
         Order: {
           tagname: "Order",
           attributes: {
@@ -83,6 +86,7 @@ const testCases: Array<{description: string, xml: string, expected: any, parser:
         <OrderCode>12345</OrderCode>
       </Order>`,
     expected: {
+        rootName: "Order",
         Order: {
           tagname: "Order",
           attributes: {
@@ -111,6 +115,7 @@ const testCases: Array<{description: string, xml: string, expected: any, parser:
         <OrderCode>12345</OrderCode>
       </Order>`,
     expected: {
+        rootName: "Order",
         Order: {
           tagname: "Order",
           attributes: {
@@ -129,15 +134,47 @@ const testCases: Array<{description: string, xml: string, expected: any, parser:
     },
     parser: "default",
     parseAttributes: true
+  },
+  {
+    description: "should parse a simple XML entity and sanitize values",
+    xml: `
+      <Order status="&#40;active&#41;" priority="&#35;high" isUrgent="false" itemCount="&#51;">
+        <DeliveryPerson>John&#32;Doe</DeliveryPerson>
+        <IsCanceled>false</IsCanceled>
+        <IsDelivered>true</IsDelivered>
+        <OrderCode>12345</OrderCode>
+      </Order>`,
+    expected: {
+        rootName: "Order",
+        Order: {
+          tagname: "Order",
+          attributes: {
+            status: "(active)",
+            priority: "#high",
+            isUrgent: false,
+            itemCount: 3
+          },
+          nodes: {
+            DeliveryPerson: { tagname: "DeliveryPerson", value: "John Doe" },
+            IsCanceled: { tagname: "IsCanceled", value: false },
+            IsDelivered: { tagname: "IsDelivered", value: true },
+            OrderCode: { tagname: "OrderCode", value: 12345}
+          }
+        }
+    },
+    parser: "default",
+    parseAttributes: true,
+    sanitize: true
   }
 ];
 
 describe("parse simple XML entities", ()=> {
-  test.each(testCases)('$description - parser: $parser', ({ xml, expected, parser, parseAttributes }) => {
+  test.each(testCases)('$description - parser: $parser', ({ xml, expected, parser, sanitize, parseAttributes }) => {
       const result = jsonify({
         xml,
         valueParser: parser,
-        parseAttributes
+        parseAttributes,
+        sanitize
       });
       expect(result).toEqual(expected);
   });

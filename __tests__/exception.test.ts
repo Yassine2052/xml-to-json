@@ -49,6 +49,22 @@ const testCases = [
           <catalog>
               <9book id="test=adazsq" rank="19" budget="56.5498" createdAt="2000-12-16" approved="true" />
           </catalog>`
+    },
+    {
+        description: "should throw an exception for using a '<' inside the tag",
+        xml: `
+          <?xml version="1.0"?>
+          <catalog>
+              <book id="test=adazsq" rank="19" budget="56.5498" createdAt="2000-12-16" approved="true<" />
+          </catalog>`
+    },
+    {
+        description: "should throw an exception for using a '<' inside the tag",
+        xml: `
+          <?xml version="1.0"?>
+          <catalog>
+              <book id="test=adazsq" rank="19" budget="56.5498" createdAt="2000-12-16" approved="true<">hell<</book>
+          </catalog>`
     }
 ];
 

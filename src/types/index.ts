@@ -12,6 +12,9 @@ export type JsonifyXMLParser = "default" | "string" | NodeValueParser;
 export type JsonifyXMLBaseOptions = Partial<{
     valueParser: JsonifyXMLParser,
     parseAttributes: boolean,
-    output: string
+    output: string,
+    sanitize: boolean
 }>;
 export type JsonifyXMLOptions = JsonifyXMLBaseOptions & ({ xml: string } | { input: string });
+
+export type JsonifyResult = [string, { [x: string]: Node }];

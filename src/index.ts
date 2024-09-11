@@ -1,41 +1,14 @@
-import { XML_COMMENT_REGEX, XML_DOC_REGEX, XML_WHITE_SPACES_REGEX } from "./constants/regex";
-import { chooseValueParser, parseNodeAttributes, parseValue } from "./helpers/parser";
+import { specialCharsMap } from "./constants";
+import { INVALID_TAG_NAME_SYMBOLS_REGEX, XML_COMMENT_REGEX, XML_DOC_REGEX } from "./constants/regex";
+import { sanitiseAttributeValue } from "./helpers/cleaners";
+import { chooseValueParser, parseNodeAttributes } from "./helpers/parser";
 import { isSelfClosingTag, closesOpenedTag, isValidAttributeName } from "./helpers/validators";
 import JsonifyError from "./models/error";
-import { JsonifyXMLBaseOptions, JsonifyXMLOptions, Node } from "./types";
+import { JsonifyResult, JsonifyXMLBaseOptions, JsonifyXMLOptions, Node } from "./types";
 import fs from "fs";
 
-export function jsonify(options: string | JsonifyXMLOptions) {
-    if(typeof options === "string") {
-        return parseJson(options);
-    }
-    
-    let xml = "";
-
-    if("xml" in options) {
-        xml = options.xml;
-    } else if ("input" in options) {
-        if (!fs.existsSync(options.input)) {
-            throw new JsonifyError(`File not found: The specified file at path "${options.input}" does not exist.`);
-        }
-        
-        xml = fs.readFileSync(options.input, "utf-8");
-    }
-    
-    const json = parseJson(xml, options);
-
-    if(options.output) {
-        fs.writeFileSync(options.output, JSON.stringify(json), "utf-8");
-    }
-
-    return json;
-}
-
-function parseJson(xml: string, { parseAttributes = false, valueParser }: JsonifyXMLBaseOptions = {}) {
-    xml = xml
-        .trim()
-        .replace(XML_WHITE_SPACES_REGEX, '><')
-        .replace(XML_COMMENT_REGEX, '');
+function parseJson(xml: string, { parseAttributes = false, valueParser, sanitize = true }: JsonifyXMLBaseOptions = {}): JsonifyResult {
+    xml = xml.replace(XML_COMMENT_REGEX, '');
 
     const stack = [{
         attributes: {},
@@ -83,7 +56,7 @@ function parseJson(xml: string, { parseAttributes = false, valueParser }: Jsonif
                 stack.push(node);
             }
 
-            const attributes = parseNodeAttributes(match[0], match[1], attributesParser);
+            const attributes = parseNodeAttributes(match[0], match[1], sanitize, attributesParser);
 
             if(Object.keys(attributes).length > 0) {
                 node.attributes = attributes;
@@ -106,9 +79,22 @@ function parseJson(xml: string, { parseAttributes = false, valueParser }: Jsonif
             if(i + 1 < matches.length && matches[i + 1][0].startsWith("</") && matches[i + 1][0].includes(match[1])) {
                 const startIndex = match.index + match[0].length;
                 const endIndex = matches[i + 1].index;
-                const value = xml.slice(startIndex, endIndex);
+                let value = xml.slice(startIndex, endIndex);
 
-                node.value = value && parser ? parser(value) : value;
+                if(sanitize) {
+                    value = value ? sanitiseAttributeValue(value) : value;
+
+                    const invalidSymbols = value.match(INVALID_TAG_NAME_SYMBOLS_REGEX);
+
+                    if (invalidSymbols && invalidSymbols.length > 0) {
+                        const firstInvalidSymbol = invalidSymbols[0] as keyof typeof specialCharsMap;
+                        const equivalentSymbol = firstInvalidSymbol in specialCharsMap ? ` by '${specialCharsMap[firstInvalidSymbol]}'` : ""
+
+                        throw new JsonifyError(`Invalid symbol found: '${firstInvalidSymbol}' in value '${value}'. Please remove or replace it${equivalentSymbol}.`);
+                    }
+                }
+                value = value && parser ? parser(value) : value;
+                node.value = value;
             }
         }
     });
@@ -117,13 +103,49 @@ function parseJson(xml: string, { parseAttributes = false, valueParser }: Jsonif
         throw new JsonifyError(`Invalid XML: Unclosed tag(s) detected. The tag <${stack[stack.length - 1].tagname}> is not closed.`);    
     } 
 
-    const root = stack.at(0)?.nodes;
-
-    if (stack.length === 0 || !root) {
+    if (stack.length === 0 || !stack[0].nodes) {
         throw new JsonifyError("Invalid XML: The document was not fully processed, possible unclosed tags or malformed structure.");
     }
 
-    return {
-        [matches[0][1] || "$"]: root[matches[0][1]]
-    };
+    const root = stack[0].nodes;
+    const rootName = matches[0][1];
+
+    if (Array.isArray(root[rootName])) {
+        throw new JsonifyError(`Invalid XML structure: Multiple root elements detected. An XML document must have a single root element, but found multiple instances of <${rootName}>.`);
+    }
+    
+    const node = root[rootName] as Node;
+    
+    return [
+        rootName,
+        {[rootName]: node}
+    ];
 }
+
+function jsonify(options: string | JsonifyXMLOptions) {
+    if(typeof options === "string") {
+        return parseJson(options);
+    }
+    
+    let xml = "";
+
+    if("xml" in options) {
+        xml = options.xml;
+    } else if ("input" in options) {
+        if (!fs.existsSync(options.input)) {
+            throw new JsonifyError(`File not found: The specified file at path "${options.input}" does not exist.`);
+        }
+        
+        xml = fs.readFileSync(options.input, "utf-8");
+    }
+    
+    const json = parseJson(xml, options);
+
+    if(options.output) {
+        fs.writeFileSync(options.output, JSON.stringify(json), "utf-8");
+    }
+
+    return json;
+}
+
+export { jsonify, JsonifyXMLOptions, JsonifyResult, JsonifyError, Node };

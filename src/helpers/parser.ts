@@ -1,7 +1,8 @@
-import { invalidCharsMap, quotes } from "../constants";
-import { CLOSING_TAG_REGEX, FLOAT_REGEX, INT_REGEX, INVALID_SYMBOLS_REGEX, SPACES_REGEX, STRING_DELIMTERS_REGEX } from "../constants/regex";
+import { specialCharsMap, quotes } from "../constants";
+import { CLOSING_TAG_REGEX, FLOAT_REGEX, INT_REGEX, INVALID_SYMBOLS_REGEX, SPACES_REGEX } from "../constants/regex";
 import JsonifyError from "../models/error";
 import { JsonifyXMLParser, NodeAttributes, NodeValueParser } from "../types";
+import { sanitiseAttributeValue } from "./cleaners";
 import { isValidAttributeName } from "./validators";
 
 export function chooseValueParser(parser: JsonifyXMLParser = parseValue) {
@@ -33,7 +34,7 @@ export function parseValue(value: string){
     return Number.isNaN(date) ? value : new Date(date);
 }
 
-export function parseNodeAttributes(tag: string, tagname: string, valueParser?: NodeValueParser) {
+export function parseNodeAttributes(tag: string, tagname: string, sanitize: boolean, valueParser?: NodeValueParser) {
     return tag
         .replace(new RegExp(`^<${tagname}`, "g"), '')
         .replace(CLOSING_TAG_REGEX, '')
@@ -50,7 +51,7 @@ export function parseNodeAttributes(tag: string, tagname: string, valueParser?: 
             }
 
             if(splitedItem.length === 1) {
-                throw new JsonifyError(`XML JsonifyError: Expected value after <${tagname} ${splitedItem[0]}=? >`)
+                throw new JsonifyError(`Expected value after <${tagname} ${splitedItem[0]}=? >`)
             }
 
             if(!isValidAttributeName(splitedItem[0])) {
@@ -63,14 +64,15 @@ export function parseNodeAttributes(tag: string, tagname: string, valueParser?: 
         .reduce((res, item) => {
             const attributeName = item[0].trim();
             if(attributeName) {
-                const value = typeof item[1] === "string" ? parseAttributeValue(item[1]) : item[1];
+                const value = typeof item[1] === "string" ? parseAttributeValue(item[1], sanitize) : item[1];
+
                 res[attributeName] = valueParser ? valueParser(value) : value;
             }
             return res;
         }, {} as NodeAttributes);
 }
 
-function parseAttributeValue(value: string) {
+function parseAttributeValue(value: string, sanitize: boolean) {
     value = value.trim();
     const firstChar = value[0];
 
@@ -87,23 +89,21 @@ function parseAttributeValue(value: string) {
     let innerValue = value.slice(1, value.length - 1);
 
     if(innerValue.includes(firstChar)) {
-        throw new JsonifyError(`Invalid attribute value: The character '${firstChar}' is used as a delimiter, but it appears inside the value. Please escape or remove the internal '${firstChar}' or replace it by ${invalidCharsMap[firstChar as keyof typeof invalidCharsMap]}.`);    
+        throw new JsonifyError(`Invalid attribute value: The character '${firstChar}' is used as a delimiter, but it appears inside the value. Please escape or remove the internal '${firstChar}' or replace it by ${specialCharsMap[firstChar as keyof typeof specialCharsMap]}.`);    
     }     
     
-    innerValue = innerValue
-        .replace(/&quot;/g, '"')    // Replace &quot; with "
-        .replace(/&apos;/g, "'")    // Replace &apos; with '
-        .replace(/&lt;/g, '<')      // Replace &lt; with <
-        .replace(/&gt;/g, '>')      // Replace &gt; with >
-        .replace(/&amp;/g, '&');
+    if(sanitize) {
+        innerValue = sanitiseAttributeValue(innerValue);
 
-    const invalidSymbols = innerValue.match(INVALID_SYMBOLS_REGEX);
-    if (invalidSymbols && invalidSymbols.length > 0) {
-        const firstInvalidSymbol = invalidSymbols[0] as keyof typeof invalidCharsMap;
-        const equivalentSymbol = firstInvalidSymbol in invalidCharsMap ? ` by '${invalidCharsMap[firstInvalidSymbol]}'` : ""
+        const invalidSymbols = innerValue.match(INVALID_SYMBOLS_REGEX);
 
-        throw new JsonifyError(`Invalid symbol found: '${firstInvalidSymbol}' in value '${innerValue}'. Please remove or replace it${equivalentSymbol}.`);
+        if (invalidSymbols && invalidSymbols.length > 0) {
+            const firstInvalidSymbol = invalidSymbols[0] as keyof typeof specialCharsMap;
+            const equivalentSymbol = firstInvalidSymbol in specialCharsMap ? ` by '${specialCharsMap[firstInvalidSymbol]}'` : ""
+
+            throw new JsonifyError(`Invalid symbol found: '${firstInvalidSymbol}' in value '${innerValue}'. Please remove or replace it${equivalentSymbol}.`);
+        }
     }
-
+    
     return innerValue;
 }
