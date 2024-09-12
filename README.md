@@ -144,7 +144,7 @@ const hexNum = /&#x([0-9A-Fa-f]+);/g;
 ```xml
 <Order status="active" priority="high" isUrgent="false" itemCount="3">
 	<DeliveryPerson>John Doe</DeliveryPerson>
-    <IsCanceled>false</IsCanceled>
+  <IsCanceled>false</IsCanceled>
 	<IsDelivered>true</IsDelivered>
 	<OrderCode>12345</OrderCode>
 	<OrderDate>2024-11-09</OrderDate>
@@ -155,13 +155,13 @@ const hexNum = /&#x([0-9A-Fa-f]+);/g;
 
 ```ts
 import path from "path";
-import { jsonify, JsonifyXMLOptions, JsonifyResult } from "../src";
+import { jsonify, JsonifyXMLOptions, JsonifyResult, Node } from "../src";
 import { docs } from "./docs";
 
 const INPUT = path.join(__dirname, "index.xml");
 const OUTPUT = path.join(__dirname, "output.json");
 
-const options = {
+const options: JsonifyXMLOptions = {
     input: INPUT,
     output: OUTPUT,
     valueParser,
@@ -172,7 +172,7 @@ const options = {
 const [rootName, jsonResult]: JsonifyResult = jsonify(options);
 const order: Node = jsonResult[rootName];
 
-console.log(order.attributes.status, result.tagname, result.value);
+console.log(order.attributes.status, result.tagname, result.value, result.nodes.DeliveryPerson.value);
 
 function valueParser(value: string) {
     // Check if value is a boolean
@@ -194,38 +194,40 @@ function valueParser(value: string) {
 ### output.json
 
 ```json
-{
-  "rootName": "Order",
-  "Order": {
-    "tagname": "Order",
-    "attributes": {
-      "status": "active",
-      "priority": "high",
-      "isUrgent": false,
-      "itemCount": 3
-    },
-    "nodes": {
-      "DeliveryPerson": {
-        "tagname": "DeliveryPerson",
-        "value": "John Doe"
+[
+  "Order",
+  {
+    "Order": {
+      "tagname": "Order",
+      "attributes": {
+        "status": "active",
+        "priority": "high",
+        "isUrgent": false,
+        "itemCount": 3
       },
-      "IsCanceled": {
-        "tagname": "IsCanceled",
-        "value": false
-      },
-      "IsDelivered": {
-        "tagname": "IsDelivered",
-        "value": true
-      },
-      "OrderCode": {
-        "tagname": "OrderCode",
-        "value": 12345
-      },
-      "OrderDate": {
-	      "tagname": "OrderDate",
-	      "value": "2024-11-09T00:00:00.000Z"
+      "nodes": {
+        "DeliveryPerson": {
+          "tagname": "DeliveryPerson",
+          "value": "John Doe"
+        },
+        "IsCanceled": {
+          "tagname": "IsCanceled",
+          "value": false
+        },
+        "IsDelivered": {
+          "tagname": "IsDelivered",
+          "value": true
+        },
+        "OrderCode": {
+          "tagname": "OrderCode",
+          "value": 12345
+        },
+        "OrderDate": {
+          "tagname": "OrderDate",
+          "value": "2024-11-09T00:00:00.000Z"
+        }
       }
     }
   }
-}
+]
 ```
