@@ -83,7 +83,7 @@ function parseJson(xml: string, { parseAttributes = false, valueParser, sanitize
 
                 if(sanitize) {
                     value = value ? sanitiseAttributeValue(value) : value;
-
+                    
                     const invalidSymbols = value.match(INVALID_TAG_NAME_SYMBOLS_REGEX);
 
                     if (invalidSymbols && invalidSymbols.length > 0) {

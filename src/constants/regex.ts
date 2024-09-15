@@ -15,7 +15,8 @@ export const SELF_CLOSING_TAG_REGEX = /\s*\/>$/;
 
 export const SPACES_REGEX = /\s+/g;
 
-export const ATTRIBUTE_NAME_VALIDATOR_REGEX = /^[a-zA-Z_][\w.-]*$/
+export const ATTRIBUTE_NAME_VALIDATOR_REGEX = /^[a-zA-Z_][\w.-:]*$/;
+export const TAG_NAME_VALIDATOR_REGEX = /^[a-zA-Z_][\w.-]*$/
 export const INVALID_SYMBOLS_REGEX = /[<>&]/g;
 export const INVALID_TAG_NAME_SYMBOLS_REGEX = /[<>]/g;
 

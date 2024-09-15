@@ -3,7 +3,7 @@ import { CLOSING_TAG_REGEX, FLOAT_REGEX, INT_REGEX, INVALID_SYMBOLS_REGEX, SPACE
 import JsonifyError from "../models/error";
 import { JsonifyXMLParser, NodeAttributes, NodeValueParser } from "../types";
 import { sanitiseAttributeValue } from "./cleaners";
-import { isValidAttributeName } from "./validators";
+import { isValidAttributeName, isValidAttributeNameWithNamespace } from "./validators";
 
 export function chooseValueParser(parser: JsonifyXMLParser = parseValue) {
     if(typeof parser === "string") {
@@ -54,6 +54,10 @@ export function parseNodeAttributes(tag: string, tagname: string, sanitize: bool
                 throw new JsonifyError(`Expected value after <${tagname} ${splitedItem[0]}=? >`)
             }
 
+            if(!isValidAttributeNameWithNamespace(splitedItem[0])) {
+                throw new JsonifyError(`Invalid XML attribute name: "${splitedItem[0]}". Attribute names may only contain one namespace prefix (e.g., 'prefix:attribute'). Multiple colons or invalid characters are not allowed.`);
+            }
+            
             if(!isValidAttributeName(splitedItem[0])) {
                 throw new JsonifyError(`Invalid XML attribute name: "${splitedItem[0]}". Attribute names must start with a letter or underscore and can only contain letters, digits, hyphens, underscores, and periods.`)
             }

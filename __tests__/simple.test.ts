@@ -177,7 +177,40 @@ const testCases: Array<{description: string, xml: string, expected: any, parser:
     parser: "default",
     parseAttributes: true,
     sanitize: true
-  }
+  },
+  {
+    description: "should parse XML with namespace attributes correctly",
+    xml: `
+      <Order xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="OnlineOrder" status="active" priority="high">
+        <Delivery xsi:method="Express">John Doe</Delivery>
+        <OrderCode>12345</OrderCode>
+      </Order>`,
+    expected: [
+      "Order",
+      {
+        Order: {
+          tagname: "Order",
+          attributes: {
+            "xsi:type": "OnlineOrder",
+            status: "active",
+            "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
+            priority: "high"
+          },
+          nodes: {
+            Delivery: {
+              tagname: "Delivery",
+              attributes: { "xsi:method": "Express" },
+              value: "John Doe"
+            },
+            OrderCode: { tagname: "OrderCode", value: 12345 }
+          }
+        }
+      }
+    ],
+    parser: "default",
+    parseAttributes: true,
+    sanitize: true
+  }  
 ];
 
 describe("parse simple XML entities", ()=> {

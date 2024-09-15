@@ -1,10 +1,13 @@
 {
   "name": "jsonify-xml",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A lightweight and efficient library for converting XML to JSON. Perfect for developers needing a simple yet powerful solution to transform XML data structures into JSON format with ease. Ideal for web applications, API integrations, and data parsing workflows.",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
+  "repository": {
+    "url": "https://github.com/Yassine2052/xml-to-json"
+  },
   "scripts": {
     "build": "tsup",
     "prepare": "tsup",

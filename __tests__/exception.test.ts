@@ -65,7 +65,14 @@ const testCases = [
           <catalog>
               <book id="test=adazsq" rank="19" budget="56.5498" createdAt="2000-12-16" approved="true<">hell<</book>
           </catalog>`
-    }
+    },
+    {
+        description: "should throw an exception for invalid XML attribute name with multiple colons",
+        xml: `
+          <Order invalid:attr:name="InvalidValue" status="active" priority="high">
+            <OrderCode>12345</OrderCode>
+          </Order>`,
+    }      
 ];
 
 describe("parse invalid XML entities", () => {
